@@ -1,24 +1,25 @@
 import './App.css';
-import Canvas from './components/Canvas';
-import {useCallback} from 'react'
+import Game from './Game';
+import {createContext} from 'react'
+import useGame from './hooks/useGame';
+
+export const GameContext = createContext()
 
 function App() {
 
-  
+  const [gameState,dispatchGameActions] = useGame()
 
-  const draw = useCallback((ctx, frameCount) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    ctx.fillStyle = '#000000'
-    ctx.beginPath()
-    ctx.arc(50, 100, 20*Math.sin(frameCount*0.05)**2, 0, 2*Math.PI)
-    ctx.fill()
-  },[])
+  const value = {
+    gameState,
+    dispatchGameActions,
+    canvas2dContext: null
+  }
 
-  return (
-    <div className="App">
-      <Canvas draw={draw}/>
-    </div>
-  );
+  return(
+    <GameContext.Provider value={value}>
+      <Game/>
+    </GameContext.Provider>
+  )
 }
 
 export default App;
